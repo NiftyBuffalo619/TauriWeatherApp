@@ -1,179 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <link rel="stylesheet" href="styles.css" type="text/css" />
-  </head>
-  <body class="blurred">
-    <header class="header">
-         <div class="header-left">
-          <img class="weather-icon large" src="./icons/sun.svg" data-current-icon/>
-          <div class="header-current-temp">
-            <span data-current-temp>31</span>&deg;C</div>
-         </div>
-         <div class="header-right">
-            <div class="info-group">
-              <div class="label">High</div>
-              <div><span data-current-high>32</span>&deg;</div>
+    <link rel="stylesheet" href="./styles.css" type="text/css" />
+</head>
+<body>
+    <div class="card">
+        <div class="weather">
+            <img class="weather-icon" src="./images/clear.png" />
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">Mikulov</h2>
+        </div>
+        <div class="details">
+            <div class="col">
+                <img src="images/wind.png" />
+                <div>
+                    <div class="wind"></div>
+                    <p>Wind Speed</p>
+                </div>
             </div>
-            <div class="info-group">
-              <div class="label">FL High</div>
-              <div><span data-current-fl-high>32</span>&deg;</div>
-            </div>
-            <div class="info-group">
-              <div class="label">Wind</div>
-              <div><span data-current-wind>32</span><span class="value-sub-info">km/h</span></div>
-            </div>
-            <div class="info-group">
-              <div class="label">Low</div>
-              <div><span data-current-low>32</span>&deg;</div>
-            </div>
-            <div class="info-group">
-              <div class="label">FL low</div>
-              <div><span data-current-fl-low>32</span>&deg;</div>
-            </div>
-            <div class="info-group">
-              <div class="label">Precip</div>
-              <div><span data-current-precip>0.1</span><span class="value-sub-info">mm</span></div>
-            </div>
-         </div>
-         
-    </header>
+        </div>
+    </div>
+    <script>
+        window.onload = checkWeather();
 
-    <section class="day-section" data-day-section>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-      <div class="day-card">
-        <img src="./icons/cloud-bolt.svg" class="weather-icon"/>
-        <div class="day-card-day">Monday</div>
-        <div>32&deg;</div>
-      </div>
-    </section>
+        async function checkWeather() {
+            const apiURL = "https://api.open-meteo.com/v1/forecast?latitude=48.806751&longitude=16.638371&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum&current_weather=true&timeformat=unixtime&timezone=Europe%2FBerlin";
+            const response = await fetch(apiURL);
+            var data = await response.json();
+            console.log(data);
+            const weatherCode = data.current_weather.weathercode;
+            document.querySelector(".weather-icon").src = GetWeatherImage(weatherCode);
+            document.querySelector(".temp").innerHTML = Math.round(data.current_weather.temperature) + "°C";
+            document.querySelector(".wind").innerHTML = data.current_weather.windspeed + "km/h";
+        }
 
-
-     <table class="hour-section">
-         <tbody data-hour-section>
-          <tr class="hour-row">
-            <td>
-              <div class="info-group">
-                <div class="label">Thursday</div>
-                <div>3 PM</div>
-              </div>
-            </td>
-            <td>
-              <div class="info-group">
-                <img src="./public/icons/sun.svg" class="weather-icon">
-              </div>
-            </td>
-            <td>
-              <div class="info-group">
-                <div class="label">Temp</div>
-                <div>31&deg;</div>
-              </div>
-            </td>
-            <td>
-              <div class="info-group">
-                <div class="label">FL Temp</div>
-                <div>31&deg;</div>
-              </div>
-            </td>
-            <td>
-              <div class="info-group">
-                <div class="label">Wind</div>
-                <div>6<span class="value-sub-info">mph</span></div>
-              </div>
-            </td>
-            <td>
-              <div class="info-group">
-                <div class="label">Percip</div>
-                <div>0<span class="value-sub-info">in</span></div>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-     </table>
-
-
-    <template id="day-card-template">
-      <div class="day-card">
-        <img data-icon class="weather-icon" />
-        <div class="day-card-day" date-date></div>
-        <div><span data-temp></span><span>&deg;C</span></div>
-      </div>
-    </template>
-
-
-    <template id="hour-row-template">
-      <tr class="hour-row">
-        <tr class="hour-row">
-          <td>
-            <div class="info-group">
-              <div class="label" data-day></div>
-              <div data-time></div>
-            </div>
-          </td>
-          <td>
-            <div class="info-group">
-              <img data-icon class="weather-icon">
-            </div>
-          </td>
-          <td>
-            <div class="info-group">
-              <div class="label">Temp</div>
-              <div><span data-temp></span><span>&deg;</span></div>
-            </div>
-          </td>
-          <td>
-            <div class="info-group">
-              <div class="label">FL Temp</div>
-              <div><span data-fl-temp></span><span>&deg;</span></div>
-            </div>
-          </td>
-          <td>
-            <div class="info-group">
-              <div class="label">Wind</div>
-              <div><span data-wind></span><span>km/h</span></div>
-            </div>
-          </td>
-          <td>
-            <div class="info-group">
-              <div class="label">Percip</div>
-              <div><span data-precip></span><span>mm</span></div>
-            </div>
-          </td>
-        </tr>
-      </tr>
-    </template>
-    <script type="module" src="./main.js"></script>
-  </body>
+        function GetWeatherImage(weathercode) {
+            switch (weathercode) {
+                case 0 , 1:
+                    return "./images/clear.png";
+                break;
+                case 2:
+                    return "./images/mist.png";
+                break;
+                case 3:
+                    return "./images/clouds.png";
+                break;
+                case 71, 73, 75, 77, 85, 86:
+                    return "./images/snow.png";
+                break;
+                default:
+                    return "./images/clear.png";
+                break;
+            }
+        }
+    </script>
+</body>
 </html>

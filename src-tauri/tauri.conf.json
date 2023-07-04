@@ -38,8 +38,9 @@
         "fullscreen": false,
         "resizable": true,
         "title": "Weather App",
-        "width": 800,
-        "height": 600
+        "width": 850,
+        "height": 650,
+        "decorations": true
       }
     ]
   }
